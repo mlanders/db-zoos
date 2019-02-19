@@ -31,7 +31,7 @@ server.get('/api/zoos', async (req, res) => {
 server.get('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = await db('zoos');
+		const result = await db('zoos').where('id', id);
 		res.status(200).json(result);
 	} catch (error) {
 		res.status(500).json(error);
@@ -41,7 +41,9 @@ server.get('/api/zoos/:id', async (req, res) => {
 server.delete('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = db('zoos').where('id', id);
+		const result = await db('zoos')
+			.where('id', id)
+			.del();
 		res.status(200).json(result);
 	} catch (error) {
 		res.status(500).json(error);
@@ -51,7 +53,7 @@ server.delete('/api/zoos/:id', async (req, res) => {
 server.put('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = db('zoos')
+		const result = await db('zoos')
 			.where('id', id)
 			.update(req.body);
 		res.status(200).json(result);
