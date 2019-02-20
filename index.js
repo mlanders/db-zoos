@@ -31,8 +31,13 @@ server.get('/api/zoos', async (req, res) => {
 server.get('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = await db('zoos').where('id', id);
-		res.status(200).json(result);
+		const idCheck = await db('zoos').where('id', id);
+		if (idCheck.length) {
+			const result = await db('zoos').where('id', id);
+			res.status(200).json(result);
+		} else {
+			res.status(404).json({ message: 'Unable to find that ID' });
+		}
 	} catch (error) {
 		res.status(500).json(error);
 	}
@@ -41,10 +46,15 @@ server.get('/api/zoos/:id', async (req, res) => {
 server.delete('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = await db('zoos')
-			.where('id', id)
-			.del();
-		res.status(200).json(result);
+		const idCheck = await db('zoos').where('id', id);
+		if (idCheck.length) {
+			const result = await db('zoos')
+				.where('id', id)
+				.del();
+			res.status(200).json(result);
+		} else {
+			res.status(404).json({ message: 'Unable to find that ID' });
+		}
 	} catch (error) {
 		res.status(500).json(error);
 	}
@@ -53,10 +63,15 @@ server.delete('/api/zoos/:id', async (req, res) => {
 server.put('/api/zoos/:id', async (req, res) => {
 	try {
 		const { id } = req.params;
-		const result = await db('zoos')
-			.where('id', id)
-			.update(req.body);
-		res.status(200).json(result);
+		const idCheck = await db('zoos').where('id', id);
+		if (idCheck.length) {
+			const result = await db('zoos')
+				.where('id', id)
+				.update(req.body);
+			res.status(200).json(result);
+		} else {
+			res.status(400).json({ message: 'Unable to find that ID' });
+		}
 	} catch (error) {
 		res.status(500).json(error);
 	}
